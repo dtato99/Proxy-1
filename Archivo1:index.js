@@ -9,10 +9,7 @@ app.get("/flow", async (req, res) => {
     const response = await axios.get(url, {
       responseType: "stream",
       headers: {
-        "User-Agent": "Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 Chrome/146.0.0.0 Mobile Safari/537.36",
-        "Referer": "https://la14hd.com/",
-        "Origin": "https://la14hd.com"
-      }
+        "User-Agent": "Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 Chrome/146.0.0.0 Mobile Safari/537.36}
     });
 
     res.setHeader("Content-Type", response.headers["content-type"]);
