@@ -1,22 +1,37 @@
-export default {
-  async fetch(request) {
+// 👉 ESPN Premium automático
+if (url.pathname === "/espnpremium") {
 
-    const target = "https://drive.google.com/uc?export=download&id=119AbosoTLjIeSlbeMjbnrVSzsuDhCM1X"
+  const pageUrl = "https://streamtp10.com/global1.php?stream=espnpremium";
 
-    const ua = request.headers.get("user-agent") || ""
-
-    const permitido = /sparkle|iptv|exo|okhttp/i.test(ua)
-
-    if (!permitido) {
-      return Response.redirect("https://google.com", 302)
+  const pageRes = await fetch(pageUrl, {
+    headers: {
+      "User-Agent": "Mozilla/5.0",
+      "Referer": "https://streamtp10.com/"
     }
+  });
 
-    const res = await fetch(target)
+  const html = await pageRes.text();
 
-    return new Response(res.body, {
-      headers: {
-        "Content-Type": "application/x-mpegURL"
-      }
-    })
+  // buscar m3u8
+  const match = html.match(/https?:\/\/[^"' ]+\.m3u8[^"' ]*/);
+
+  if (!match) {
+    return new Response("No se encontró stream ESPN", { status: 500 });
   }
+
+  const streamUrl = match[0];
+
+  const streamRes = await fetch(streamUrl, {
+    headers: {
+      "User-Agent": "Mozilla/5.0",
+      "Referer": pageUrl,
+      "Origin": "https://streamtp10.com"
+    }
+  });
+
+  return new Response(streamRes.body, {
+    headers: {
+      "Content-Type": "application/x-mpegURL"
+    }
+  });
 }
